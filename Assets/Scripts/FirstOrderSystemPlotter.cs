@@ -22,6 +22,7 @@ public class FirstOrderSystemPlotter : MonoBehaviour
         plotLineRenderer.endWidth = lineWidth;
         plotLineRenderer.positionCount = resolution + 1;
 
+
         DrawFirstOrderResponse();
     }
 
@@ -62,26 +63,74 @@ public class FirstOrderSystemPlotter : MonoBehaviour
             float y = dcGain * (1 - Mathf.Exp(-t / timeConstant));
             plotLineRenderer.SetPosition(i, new Vector3(t, y, 0));
         }
+
+        // draw a horizontal line at 0,5 and 5,5
+       gridBackground.CreateGridLine(new Vector3(0, 0.5f, 0), new Vector3(10, 0.5f, 0));
+
+    }
+
+    // Update the dcGain when the slider value changes
+    public void DCGainChanged(float newDCGain)
+    {
+        dcGain = newDCGain;
+        DrawFirstOrderResponse();
+    }
+
+    public void TimeConstantChanged(float newTimeConstant)
+    {
+        timeConstant = newTimeConstant;
+        DrawFirstOrderResponse();
     }
 
     void Update()
     {
-        if (last_dc_gain != dcGain)
-        {
-            // Calculate the amplitude based on the dc gain. amplitudeshould be a multiple of 0.2f
-            float amplitude = Mathf.Ceil(dcGain / 0.5f) * 0.5f;
-            gridBackground.amplitude = amplitude;
+        // if (last_dc_gain != dcGain)
+        // {
+        //     // Calculate the amplitude based on the dc gain. amplitudeshould be a multiple of 0.2f
+        //     float amplitude = Mathf.Ceil(dcGain / 0.5f) * 0.5f;
+        //     gridBackground.amplitude = amplitude;
 
-            // the grid lines based on the new amplitude
-            gridBackground.gridLinesY = Mathf.CeilToInt(amplitude / 0.5f);
+        //     // calculate the gridlinesx based on the new duration
+        //     gridBackground.gridLinesX = Mathf.CeilToInt(duration / 2f);
 
-            // Draw the grid again
-            gridBackground.DrawGrid();
-        }
-        last_dc_gain = dcGain;
+
+        //     // the grid lines based on the new amplitude
+        //     gridBackground.gridLinesY = Mathf.CeilToInt(amplitude / 0.5f);
+
+        //     // Draw the grid again
+        //     gridBackground.DrawGrid();
+        // }
+        // last_dc_gain = dcGain;
 
 
         // Optional: animate parameters or redraw
-        DrawFirstOrderResponse();
+        // DrawFirstOrderResponse();
+    }
+
+    // Draw horizintal and vertical dashed lines once, and then update their positions
+    public void DrawLines()
+    {
+        // Clear the grid before drawing
+        gridBackground.ClearGrid();
+
+        // Draw vertical grid lines
+        for (int i = 0; i <= gridBackground.gridLinesX; i++)
+        {
+            float x = i * (duration / gridBackground.gridLinesX);
+            gridBackground.CreateGridLine(new Vector3(x, 0, 0), new Vector3(x, gridBackground.amplitude, 0));
+        }
+
+        // Draw horizontal grid lines
+        for (int j = 0; j <= gridBackground.gridLinesY; j++)
+        {
+            float y = j * (gridBackground.amplitude / gridBackground.gridLinesY);
+            gridBackground.CreateGridLine(new Vector3(0, y, 0), new Vector3(duration, y, 0));
+        }
+    }
+
+    // Clear the grid
+    public void ClearGrid()
+    {
+        gridBackground.ClearGrid();
     }
 }

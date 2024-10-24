@@ -5,7 +5,7 @@ public class GridBackground : MonoBehaviour
     public float duration = 10f;          // Duration in seconds (x-axis)
     public float amplitude = 1f;          // Maximum value on the y-axis
     public int gridLinesX = 10;           // Number of vertical grid lines
-    public int gridLinesY = 5;            // Number of horizontal grid lines
+    public int gridLinesY = 10;            // Number of horizontal grid lines
     float gridLineWidth = 0.01f;   // Width of the grid lines
 
     void Start()
@@ -33,7 +33,7 @@ public class GridBackground : MonoBehaviour
         }
     }
 
-    void CreateGridLine(Vector3 start, Vector3 end)
+    public void CreateGridLine(Vector3 start, Vector3 end)
     {
         GameObject gridLine = new GameObject("GridLine");
         LineRenderer lineRenderer = gridLine.AddComponent<LineRenderer>();
